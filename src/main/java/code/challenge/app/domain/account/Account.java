@@ -4,6 +4,7 @@ import code.challenge.app.domain.card.Card;
 import code.challenge.app.domain.customer.Customer;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Account {
@@ -12,16 +13,44 @@ public class Account {
     private String agency;
     private Customer customer;
     private List<Card> cards;
+    private Boolean isActive;
 
     public Account() {
     }
 
-    public Account(UUID id, String accountNumber, String agency, Customer customer, List<Card> cards) {
+    public Account(UUID id, String accountNumber, String agency, Customer customer, List<Card> cards, Boolean isActive) {
+        if (Objects.isNull(id)) {
+            throw new IllegalArgumentException("customer id cannot be null");
+        }
+
         this.id = id;
         this.accountNumber = accountNumber;
         this.customer = customer;
         this.agency = agency;
         this.cards = cards;
+        this.isActive = isActive;
+    }
+
+    public static Account newCustomerAccount(
+            String accountNumber,
+            String agency,
+            Customer customer
+    ) {
+        if (Objects.isNull(customer)) {
+            throw new IllegalArgumentException("customer cannot be null");
+        }
+
+        if (Objects.isNull(accountNumber)) {
+            throw new IllegalArgumentException("account number cannot be null");
+        }
+
+        if (Objects.isNull(agency)) {
+            throw new IllegalArgumentException("agency cannot be null");
+        }
+
+        var newId = UUID.randomUUID();
+
+        return new Account(newId, accountNumber, agency, customer, null, true);
     }
 
     public UUID getId() {
@@ -62,5 +91,13 @@ public class Account {
 
     public void setAgency(String agency) {
         this.agency = agency;
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
     }
 }
