@@ -34,7 +34,7 @@ public class InactivateAccountUseCase extends UseCase<InactivateAccountUseCase.I
                 });
 
         account.setIsActive(false);
-        accountRepository.save(account);
+        accountRepository.update(account);
 
         log.info("Account inactivated successfully");
 

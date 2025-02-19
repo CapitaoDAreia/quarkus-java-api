@@ -41,6 +41,16 @@ public class CreateAccountByCustomerCpfAccountAndAgencyUseCase extends UseCase<C
                     return new ErrorCreatingAccountException(msg);
                 });
 
+        var userAlreadyHasAnAccount = Optional
+                .ofNullable(accountRepository.getAccountByCustomerCpf(input.customerCpf()))
+                .isPresent();
+
+        if (userAlreadyHasAnAccount) {
+            var msg = "Customer already has an account";
+            log.warn(msg);
+            throw new ErrorCreatingAccountException(msg);
+        }
+
         var accountAlreadyExists = Optional
                 .ofNullable(accountRepository.accountExists(input.accountNumber(), input.agency()))
                 .orElseThrow(() -> {

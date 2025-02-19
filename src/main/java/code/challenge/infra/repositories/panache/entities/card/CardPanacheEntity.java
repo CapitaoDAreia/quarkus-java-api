@@ -3,8 +3,6 @@ package code.challenge.infra.repositories.panache.entities.card;
 import code.challenge.app.domain.card.Card;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -15,7 +13,6 @@ import java.util.UUID;
 @Table(name = "card")
 public class CardPanacheEntity extends PanacheEntityBase {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     public UUID id;
     public String number;
     public Date expirationDate;

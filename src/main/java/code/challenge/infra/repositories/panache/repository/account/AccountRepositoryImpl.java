@@ -21,8 +21,13 @@ public class AccountRepositoryImpl implements AccountRepository {
     @Override
     public Account save(Account account) {
         AccountPanacheEntity entity = AccountPanacheEntity.fromDomain(account);
-        entity.persistAndFlush();
+        entity.persist();
         return entity.isPersistent() ? entity.toDomainObject() : null;
+    }
+
+    @Override
+    public void update(Account account) {
+        AccountPanacheEntity.update("isActive = false where accountNumber = ?1", account.getAccountNumber());
     }
 
     @Override
@@ -40,5 +45,14 @@ public class AccountRepositoryImpl implements AccountRepository {
                 "accountNumber = ?1 and agency = ?2",
                 accountNumber, agency
         ) > 0;
+    }
+
+    @Override
+    public Account getAccountByCustomerCpf(String customerCpf) {
+        AccountPanacheEntity entity = AccountPanacheEntity.find(
+                "customer.cpf", customerCpf
+        ).firstResult();
+
+        return Objects.nonNull(entity) ? entity.toDomainObject() : null;
     }
 }

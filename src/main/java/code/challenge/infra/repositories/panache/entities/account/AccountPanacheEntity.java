@@ -7,24 +7,23 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Entity
 @Table(name = "account")
 public class AccountPanacheEntity extends PanacheEntityBase {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     public UUID id;
     public String accountNumber;
     public String agency;
@@ -40,7 +39,12 @@ public class AccountPanacheEntity extends PanacheEntityBase {
     public Boolean isActive;
 
     public Account toDomainObject() {
-        var domainCards = this.cards.stream().map(CardPanacheEntity::toDomainObject).toList();
+        var domainCards = Optional.ofNullable(this.cards)
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(CardPanacheEntity::toDomainObject)
+                .toList();
+
         var domainCustomer = Objects.nonNull(this.customer) ? this.customer.toDomainObject() : null;
 
         return new Account(id, accountNumber, agency, domainCustomer, domainCards, isActive);

@@ -36,9 +36,9 @@ public class ActivateCardUseCase extends UseCase<ActivateCardUseCase.Input, Acti
 
         card.setActive(true);
 
-        var updatedCard = cardRepository.save(card);
+        cardRepository.update(card);
 
-        return new Output(updatedCard);
+        return new Output(card);
     }
 
     public record Input(String cardNumber) {

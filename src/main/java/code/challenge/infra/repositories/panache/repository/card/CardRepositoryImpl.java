@@ -17,16 +17,21 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
+    public void update(Card card) {
+        CardPanacheEntity.update("isActive = true where number = ?1", card.getNumber());
+    }
+
+    @Override
     public Boolean cardExists(String cardNumber) {
         return CardPanacheEntity.count(
-                "cardNumber", cardNumber
+                "number", cardNumber
         ) > 0;
     }
 
     @Override
     public Card getCardByCardNumber(String cardNumber) {
         CardPanacheEntity entity = CardPanacheEntity.find(
-                "cardNumber", cardNumber
+                "number", cardNumber
         ).firstResult();
 
         return Objects.nonNull(entity) ? entity.toDomainObject() : null;
