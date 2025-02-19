@@ -2,6 +2,7 @@ package code.challenge.app.domain.card;
 
 import code.challenge.app.domain.account.Account;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Card {
@@ -26,6 +27,32 @@ public class Card {
         this.isBlocked = isBlocked;
         this.country = country;
         this.account = account;
+    }
+
+    public static Card newCard(String number, String expirationDate, String cvv, String country, Account account) {
+        if (Objects.isNull(number)) {
+            throw new IllegalArgumentException("number cannot be null");
+        }
+
+        if (Objects.isNull(expirationDate)) {
+            throw new IllegalArgumentException("expiration date cannot be null");
+        }
+
+        if (Objects.isNull(cvv)) {
+            throw new IllegalArgumentException("cvv cannot be null");
+        }
+
+        if (Objects.isNull(country)) {
+            throw new IllegalArgumentException("country cannot be null");
+        }
+
+        if (Objects.isNull(account)) {
+            throw new IllegalArgumentException("account cannot be null");
+        }
+
+        var newId = UUID.randomUUID();
+
+        return new Card(newId, number, expirationDate, cvv, false, false, country, account);
     }
 
     public UUID getId() {

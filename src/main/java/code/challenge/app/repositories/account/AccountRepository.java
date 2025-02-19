@@ -6,4 +6,5 @@ public interface AccountRepository {
     Account getAccountByCpf(String cpf);
     Account save(Account account);
     Account getAccountByAccountNumber(String accountNumber);
+    Boolean accountExists(String accountNumber, String agency);
 }

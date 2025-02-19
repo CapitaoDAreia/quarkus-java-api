@@ -1,6 +1,7 @@
 package code.challenge.app.usecases.account;
 
 import code.challenge.app.domain.account.Account;
+import code.challenge.app.domain.customer.Customer;
 import code.challenge.app.exceptions.account.AccountNotFoundException;
 import code.challenge.app.logging.Logger;
 import code.challenge.app.repositories.account.AccountRepository;
@@ -20,7 +21,8 @@ class GetAccountUseCaseTest {
 
     @Test
     void shouldFetchAccountSuccessfully() {
-        var account = Account.newCustomerAccount("1001", "0001", null);
+        var customer = new Customer();
+        var account = Account.newCustomerAccount("1001", "0001", customer);
         when(accountRepositoryMock.getAccountByCpf(input.cpf())).thenReturn(account);
 
         var output = useCase.execute(input);

@@ -1,6 +1,7 @@
 package code.challenge.app.usecases.account;
 
 import code.challenge.app.domain.account.Account;
+import code.challenge.app.domain.customer.Customer;
 import code.challenge.app.exceptions.account.AccountNotFoundException;
 import code.challenge.app.logging.Logger;
 import code.challenge.app.repositories.account.AccountRepository;
@@ -19,7 +20,8 @@ class InactivateAccountUseCaseTest {
 
     @Test
     void shouldInactivateAccountSuccessfully() {
-        var account = Account.newCustomerAccount("12345", "0001", null);
+        var customer = new Customer();
+        var account = Account.newCustomerAccount("12345", "0001", customer);
 
         when(accountRepositoryMock.getAccountByAccountNumber(input.accountNumber())).thenReturn(account);
         when(accountRepositoryMock.save(account)).thenReturn(account);
