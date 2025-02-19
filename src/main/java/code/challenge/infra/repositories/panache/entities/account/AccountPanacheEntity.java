@@ -4,6 +4,7 @@ import code.challenge.app.domain.account.Account;
 import code.challenge.infra.repositories.panache.entities.card.CardPanacheEntity;
 import code.challenge.infra.repositories.panache.entities.customer.CustomerPanacheEntity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -32,7 +33,8 @@ public class AccountPanacheEntity extends PanacheEntityBase {
     @JoinColumn(name = "customer_id")
     public CustomerPanacheEntity customer;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "account_id")
     public List<CardPanacheEntity> cards;
 
     public Boolean isActive;
@@ -52,6 +54,12 @@ public class AccountPanacheEntity extends PanacheEntityBase {
 
         if (Objects.nonNull(account.getCustomer())) {
             accountPanacheEntity.customer = CustomerPanacheEntity.fromDomain(account.getCustomer());
+        }
+
+        if (Objects.nonNull(account.getCards())) {
+            accountPanacheEntity.cards = account.getCards().stream()
+                    .map(CardPanacheEntity::fromDomain)
+                    .toList();
         }
 
         return accountPanacheEntity;

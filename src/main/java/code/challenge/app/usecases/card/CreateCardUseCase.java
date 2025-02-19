@@ -9,6 +9,7 @@ import code.challenge.app.repositories.card.CardRepository;
 import code.challenge.app.usecases.UseCase;
 import jakarta.enterprise.context.ApplicationScoped;
 
+import java.util.Date;
 import java.util.Optional;
 
 @ApplicationScoped
@@ -61,7 +62,7 @@ public class CreateCardUseCase extends UseCase<CreateCardUseCase.Input, CreateCa
         return new Output(createdAccount);
     }
 
-    public record Input(String cardNumber, String expirationDate, String cvv, String country, String accountNumber) {
+    public record Input(String cardNumber, Date expirationDate, String cvv, String country, String accountNumber) {
     }
 
     public record Output(Card card) {

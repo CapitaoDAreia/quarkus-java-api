@@ -10,6 +10,8 @@ import code.challenge.app.repositories.card.CardRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Date;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -24,7 +26,7 @@ class CreateCardUseCaseTest {
             logMock
     );
 
-    private final CreateCardUseCase.Input input = new CreateCardUseCase.Input("1234567812345678", "12/25", "123", "BR", "1001");
+    private final CreateCardUseCase.Input input = new CreateCardUseCase.Input("1234567812345678", new Date(), "123", "BR", "1001");
 
     @Test
     void shouldCreateCardSuccessfully() {

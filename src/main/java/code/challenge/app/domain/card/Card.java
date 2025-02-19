@@ -2,23 +2,23 @@ package code.challenge.app.domain.card;
 
 import code.challenge.app.domain.account.Account;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
 public class Card {
     private UUID id;
     private String number;
-    private String expirationDate;
+    private Date expirationDate;
     private String cvv;
     private Boolean isActive;
     private Boolean isBlocked;
     private String country;
-    private Account account;
 
     public Card() {
     }
 
-    public Card(UUID id, String number, String expirationDate, String cvv, Boolean isActive, Boolean isBlocked, String country, Account account) {
+    public Card(UUID id, String number, Date expirationDate, String cvv, Boolean isActive, Boolean isBlocked, String country) {
         this.id = id;
         this.number = number;
         this.expirationDate = expirationDate;
@@ -26,10 +26,9 @@ public class Card {
         this.isActive = isActive;
         this.isBlocked = isBlocked;
         this.country = country;
-        this.account = account;
     }
 
-    public static Card newCard(String number, String expirationDate, String cvv, String country, Account account) {
+    public static Card newCard(String number, Date expirationDate, String cvv, String country, Account account) {
         if (Objects.isNull(number)) {
             throw new IllegalArgumentException("number cannot be null");
         }
@@ -52,7 +51,7 @@ public class Card {
 
         var newId = UUID.randomUUID();
 
-        return new Card(newId, number, expirationDate, cvv, false, false, country, account);
+        return new Card(newId, number, expirationDate, cvv, false, false, country);
     }
 
     public UUID getId() {
@@ -67,23 +66,15 @@ public class Card {
         return number;
     }
 
-    public Account getAccount() {
-        return account;
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
-    }
-
     public void setNumber(String number) {
         this.number = number;
     }
 
-    public String getExpirationDate() {
+    public Date getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(String expirationDate) {
+    public void setExpirationDate(Date expirationDate) {
         this.expirationDate = expirationDate;
     }
 
