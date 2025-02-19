@@ -1,7 +1,5 @@
 package code.challenge.app.domain.card;
 
-import code.challenge.app.domain.account.Account;
-
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
