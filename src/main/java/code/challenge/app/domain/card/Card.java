@@ -14,6 +14,7 @@ public class Card {
     private Boolean isActive;
     private Boolean isBlocked;
     private String country;
+    private UUID accountId;
 
     public Card() {
     }
@@ -28,7 +29,18 @@ public class Card {
         this.country = country;
     }
 
-    public static Card newCard(String number, Date expirationDate, String cvv, String country, Account account) {
+    public Card(UUID id, String number, Date expirationDate, String cvv, Boolean isActive, Boolean isBlocked, String country, UUID accountId) {
+        this.id = id;
+        this.number = number;
+        this.expirationDate = expirationDate;
+        this.cvv = cvv;
+        this.isActive = isActive;
+        this.isBlocked = isBlocked;
+        this.country = country;
+        this.accountId = accountId;
+    }
+
+    public static Card newCard(String number, Date expirationDate, String cvv, String country, UUID accountId) {
         if (Objects.isNull(number)) {
             throw new IllegalArgumentException("number cannot be null");
         }
@@ -45,13 +57,13 @@ public class Card {
             throw new IllegalArgumentException("country cannot be null");
         }
 
-        if (Objects.isNull(account)) {
-            throw new IllegalArgumentException("account cannot be null");
+        if (Objects.isNull(accountId)) {
+            throw new IllegalArgumentException("accountId cannot be null");
         }
 
         var newId = UUID.randomUUID();
 
-        return new Card(newId, number, expirationDate, cvv, false, false, country);
+        return new Card(newId, number, expirationDate, cvv, false, false, country, accountId);
     }
 
     public UUID getId() {
@@ -72,6 +84,14 @@ public class Card {
 
     public Date getExpirationDate() {
         return expirationDate;
+    }
+
+    public UUID getAccountId() {
+        return accountId;
+    }
+
+    public void setAccount(UUID accountId) {
+        this.accountId = accountId;
     }
 
     public void setExpirationDate(Date expirationDate) {

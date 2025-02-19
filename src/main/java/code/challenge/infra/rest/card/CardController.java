@@ -47,9 +47,9 @@ public class CardController {
                     createCardDTO.account()
             );
 
-            var card = createCardUseCase.execute(useCaseInput);
+            createCardUseCase.execute(useCaseInput);
 
-            return Response.ok(card).build();
+            return Response.created(null).build();
         } catch (CreateCardException | CardAlreadyExistsException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
@@ -63,9 +63,9 @@ public class CardController {
     ){
         try {
             var input = new ActivateCardUseCase.Input(cardNumber);
-            var card = activateCardUseCase.execute(input);
+            activateCardUseCase.execute(input);
 
-            return Response.ok(card).build();
+            return Response.noContent().build();
         } catch (CardNotFoundException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }

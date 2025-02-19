@@ -53,18 +53,18 @@ public class CreateCardUseCase extends UseCase<CreateCardUseCase.Input, CreateCa
                     return new CreateCardException(message);
                 });
 
-        var card = Card.newCard(input.cardNumber(), input.expirationDate(), input.cvv(), input.country(), account);
+        var card = Card.newCard(input.cardNumber(), input.expirationDate(), input.cvv(), input.country(), account.getId());
 
-        var createdAccount = cardRepository.save(card);
+        cardRepository.save(card, account);
 
         log.info("Card created successfully");
 
-        return new Output(createdAccount);
+        return new Output();
     }
 
     public record Input(String cardNumber, Date expirationDate, String cvv, String country, String accountNumber) {
     }
 
-    public record Output(Card card) {
+    public record Output() {
     }
 }

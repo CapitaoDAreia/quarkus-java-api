@@ -3,16 +3,19 @@ package code.challenge.infra.repositories.panache.repository.account;
 import code.challenge.app.domain.account.Account;
 import code.challenge.app.repositories.account.AccountRepository;
 import code.challenge.infra.repositories.panache.entities.account.AccountPanacheEntity;
+import code.challenge.infra.repositories.panache.entities.card.CardPanacheEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 
+import java.util.Collections;
 import java.util.Objects;
+import java.util.Optional;
 
 @ApplicationScoped
 public class AccountRepositoryImpl implements AccountRepository {
     @Override
     public Account getAccountByCpf(String cpf) {
         AccountPanacheEntity entity = AccountPanacheEntity.find(
-                "customer.cpf", cpf
+                "select a from AccountPanacheEntity a left join fetch a.cards where a.customer.cpf = ?1", cpf
         ).firstResult();
 
         return Objects.nonNull(entity) ? entity.toDomainObject() : null;
@@ -33,10 +36,22 @@ public class AccountRepositoryImpl implements AccountRepository {
     @Override
     public Account getAccountByAccountNumber(String accountNumber) {
         AccountPanacheEntity entity = AccountPanacheEntity.find(
-                "accountNumber", accountNumber
+                "select a from AccountPanacheEntity a left join fetch a.cards where a.accountNumber = ?1", accountNumber
         ).firstResult();
 
-        return Objects.nonNull(entity) ? entity.toDomainObject() : null;
+        if (Objects.nonNull(entity)) {
+            var domainCards = Optional.ofNullable(entity.cards)
+                    .orElse(Collections.emptyList())
+                    .stream()
+                    .map(CardPanacheEntity::toDomainObject)
+                    .toList();
+
+            return new Account(entity.id, entity.accountNumber, entity.agency,
+                    entity.customer != null ? entity.customer.toDomainObject() : null,
+                    domainCards, entity.isActive);
+        }
+
+        return null;
     }
 
     @Override

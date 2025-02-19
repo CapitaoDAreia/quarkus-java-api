@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Date;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -31,17 +32,23 @@ class CreateCardUseCaseTest {
     @Test
     void shouldCreateCardSuccessfully() {
         var account = new Account();
-        var expectedCard = Card.newCard(input.cardNumber(), input.expirationDate(), input.cvv(), input.country(), account);
+        var accountId = UUID.randomUUID();
+        account.setId(accountId);
+
+        var expectedCard = Card.newCard(input.cardNumber(), input.expirationDate(), input.cvv(), input.country(), accountId);
+        var expectedOutput = new CreateCardUseCase.Output();
 
         when(cardRepositoryMock.cardExists(input.cardNumber())).thenReturn(false);
         when(accountRepositoryMock.getAccountByAccountNumber(input.accountNumber())).thenReturn(account);
-        when(cardRepositoryMock.save(any(Card.class))).thenReturn(expectedCard);
+        when(cardRepositoryMock.save(any(Card.class), any(Account.class))).thenReturn(expectedCard);
 
         var output = useCase.execute(input);
 
-        assertEquals(expectedCard, output.card());
+        assertEquals(expectedOutput, output);
 
-        verify(cardRepositoryMock).save(any(Card.class));
+        verify(cardRepositoryMock).save(any(Card.class), any(Account.class));
+        verify(logMock).info("Creating card to account number " + input.accountNumber());
+        verify(logMock).info("Card created successfully");
     }
 
     @Test

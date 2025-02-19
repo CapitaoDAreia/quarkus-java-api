@@ -31,7 +31,6 @@ VALUES (
            (SELECT id FROM address WHERE street = 'Negra Arroyo Lane' AND number = '308')
        );
 
--- Inserindo a conta para o cliente Walter White
 INSERT INTO account (id, accountNumber, agency, isActive, customer_id)
 VALUES (
            UUID_TO_BIN(UUID()),
@@ -41,7 +40,7 @@ VALUES (
            (SELECT id FROM customer WHERE name = 'Walter' AND surName = 'White')
        );
 
-INSERT INTO card (id, number, expirationDate, cvv, isActive, isBlocked, country, account_id)
+INSERT INTO card (id, number, expirationDate, cvv, isActive, isBlocked, country)
 VALUES (
            UUID_TO_BIN(UUID()),
            '1234 5678 1234 5678',
@@ -49,6 +48,5 @@ VALUES (
            '123',
            true,
            false,
-           'United States',
-           (SELECT id FROM account WHERE accountNumber = '123456' AND agency = '0001')
+           'United States'
        );

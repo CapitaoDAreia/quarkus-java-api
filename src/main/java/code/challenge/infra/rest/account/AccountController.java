@@ -80,9 +80,9 @@ public class AccountController {
     ) {
         try {
             var useCaseInput = new InactivateAccountUseCase.Input(accountNumber);
-            var account = inactivateAccountUseCase.execute(useCaseInput);
+            inactivateAccountUseCase.execute(useCaseInput);
 
-            return Response.ok(account).build();
+            return Response.noContent().build();
         } catch (AccountNotFoundException e) {
             return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
         }

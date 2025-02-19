@@ -32,20 +32,21 @@ public class AccountPanacheEntity extends PanacheEntityBase {
     @JoinColumn(name = "customer_id")
     public CustomerPanacheEntity customer;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "account_id")
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     public List<CardPanacheEntity> cards;
 
     public Boolean isActive;
 
     public Account toDomainObject() {
+        var domainCustomer = Objects.nonNull(this.customer) ? this.customer.toDomainObject() : null;
+        var domainAccount = new Account(id, accountNumber, agency, domainCustomer, Collections.emptyList(), isActive);
+
         var domainCards = Optional.ofNullable(this.cards)
                 .orElse(Collections.emptyList())
                 .stream()
-                .map(CardPanacheEntity::toDomainObject)
+                .map(card -> card.toDomainObject(domainAccount))
                 .toList();
 
-        var domainCustomer = Objects.nonNull(this.customer) ? this.customer.toDomainObject() : null;
 
         return new Account(id, accountNumber, agency, domainCustomer, domainCards, isActive);
     }
@@ -55,6 +56,7 @@ public class AccountPanacheEntity extends PanacheEntityBase {
         accountPanacheEntity.id = account.getId();
         accountPanacheEntity.accountNumber = account.getAccountNumber();
         accountPanacheEntity.agency = account.getAgency();
+        accountPanacheEntity.isActive = account.getIsActive();
 
         if (Objects.nonNull(account.getCustomer())) {
             accountPanacheEntity.customer = CustomerPanacheEntity.fromDomain(account.getCustomer());
@@ -62,7 +64,7 @@ public class AccountPanacheEntity extends PanacheEntityBase {
 
         if (Objects.nonNull(account.getCards())) {
             accountPanacheEntity.cards = account.getCards().stream()
-                    .map(CardPanacheEntity::fromDomain)
+                    .map(card -> CardPanacheEntity.fromDomain(card, accountPanacheEntity))
                     .toList();
         }
 

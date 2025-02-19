@@ -1,5 +1,6 @@
 package code.challenge.app.usecases.card;
 
+import code.challenge.app.domain.account.Account;
 import code.challenge.app.domain.card.Card;
 import code.challenge.app.exceptions.card.CardNotFoundException;
 import code.challenge.app.logging.Logger;
@@ -26,16 +27,15 @@ class ActivateCardUseCaseTest {
     void shouldActivateCardSuccessfully() {
         var card = new Card();
         card.setActive(false);
-        var expectedCard = new Card();
 
         when(cardRepositoryMock.getCardByCardNumber(input.cardNumber())).thenReturn(card);
-        when(cardRepositoryMock.save(card)).thenReturn(expectedCard);
+        doNothing().when(cardRepositoryMock).update(any(Card.class));
 
         var output = useCase.execute(input);
 
-        assertEquals(expectedCard, output.card());
+        assertTrue(output.card().getActive(), "The card should be activated");
 
-        verify(cardRepositoryMock).save(card);
+        verify(cardRepositoryMock).update(card);
         verify(logMock).info("Activating card with number: " + input.cardNumber());
     }
 
@@ -49,13 +49,14 @@ class ActivateCardUseCaseTest {
     @Test
     void shouldActivateCardAndSetActiveTrue() {
         var card = new Card();
+        var account = new Account();
         var expectedCard = new Card();
 
         card.setActive(false);
         expectedCard.setActive(true);
 
         when(cardRepositoryMock.getCardByCardNumber(input.cardNumber())).thenReturn(card);
-        when(cardRepositoryMock.save(card)).thenReturn(expectedCard);
+        when(cardRepositoryMock.save(card, account)).thenReturn(expectedCard);
 
         var output = useCase.execute(input);
 

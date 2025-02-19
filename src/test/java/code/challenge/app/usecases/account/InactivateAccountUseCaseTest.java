@@ -31,7 +31,7 @@ class InactivateAccountUseCaseTest {
         assertEquals(false, output.account().getIsActive());
 
         verify(accountRepositoryMock).getAccountByAccountNumber(input.accountNumber());
-        verify(accountRepositoryMock).save(account);
+        verify(accountRepositoryMock).update(account);
     }
 
     @Test
